@@ -3,7 +3,7 @@ using PoeSample.Services;
 
 namespace PoeSample.Controllers
 {
-    public class LecturerController1 : Controller
+    public class LecturerController : Controller
     {
         public IActionResult Index()
         {

@@ -9,12 +9,17 @@ namespace PoeSample.Models
 
         public DbSet<Rate> Rates { get; set; }
 
+        public DbSet<ClaimDocument> ClaimDocuments { get; set; }
+
         public DbSet<ClaimStatus> ClaimStatuses { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //connection string
-            optionsBuilder.UseMySQL("server=localhost;database=Claims;user=user;password=password");
+            //replace dabase name 
+            //replace root user if you a custom username
+            //replace RootPassword
+            optionsBuilder.UseMySQL("server=localhost;database=YourDatabaseName;user=root;password=RootPassword");
         }
 
 
