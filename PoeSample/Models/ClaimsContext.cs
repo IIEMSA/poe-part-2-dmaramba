@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PoeSample.Models.Seeders;
 
 namespace PoeSample.Models
 {
@@ -13,13 +14,18 @@ namespace PoeSample.Models
 
         public DbSet<ClaimStatus> ClaimStatuses { get; set; }
 
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    //connection string
+        //    //replace dabase name 
+        //    //replace root user if you a custom username
+        //    //replace RootPassword
+        //    optionsBuilder.UseMySQL("server=localhost;database=YourDatabaseName;user=root;password=RootPassword");
+        //    optionsBuilder.UseMySQL("server=mysql-11060b70-dumisani-feb1.f.aivencloud.com,18264;database=defaultdb;user=avnadmin;password=AVNS_-dn-0vFCnZBd08VqmXU");
+        //}
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //connection string
-            //replace dabase name 
-            //replace root user if you a custom username
-            //replace RootPassword
-            optionsBuilder.UseMySQL("server=localhost;database=YourDatabaseName;user=root;password=RootPassword");
+            optionsBuilder.UseInMemoryDatabase(databaseName: "DatabaseDB");
         }
 
 
@@ -33,6 +39,7 @@ namespace PoeSample.Models
                 entity.HasKey(x => x.Id);
                 entity.HasOne(p => p.Person).WithMany(x => x.Claims);
             });
+            modelBuilder.ApplyConfiguration(new PersonConfiguration());
         }
 
     }

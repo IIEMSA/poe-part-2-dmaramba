@@ -1,0 +1,49 @@
+﻿@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+
+}
+
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Login - Claims</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/signin.css" asp-append-version="true" />
+
+
+</head>
+
+<body class="text-center">
+
+          <form method="post"  class="form-signin" asp-controller="Home" asp-action="Login">​
+                  @if (!String.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Message
+    </div>
+    }
+        <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <label for="Username" class="sr-only">Email address</label>
+        <input asp-for="UserName" class="form-control" placeholder="Email address" required autofocus>
+        <label asp-for="Password" class="sr-only">Password</label>
+        <input asp-for="Password" type="password"  class="form-control" placeholder="Password" required>
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <p class="mt-5 mb-3 text-muted">&copy; @DateTime.Now.Year</p>
+    </form>
+</body>
+</html>

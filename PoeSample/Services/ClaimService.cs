@@ -9,6 +9,7 @@ namespace PoeSample.Services
         public ClaimService()
         {
             claimsContext = new ClaimsContext();
+            claimsContext.Database.EnsureCreated();
         }
 
         public int AddNewClaim(Claim claim)

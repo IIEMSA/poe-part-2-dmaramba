@@ -8,7 +8,12 @@ namespace PoeSample.Controllers
         public IActionResult Index()
         {
             ClaimService claimService = new ClaimService();
-            var claims = claimService.GetAllClaimsForUser(1);//get the profile that is logged in
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login");
+            }
+            var claims = claimService.GetAllClaimsForUser(userId.Value);//get the profile that is logged in
             return View(claims);
         }
     }
