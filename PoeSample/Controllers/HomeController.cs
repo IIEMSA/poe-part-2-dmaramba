@@ -4,6 +4,7 @@ using System.Diagnostics;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
+using PoeSample.Services;
 
 namespace PoeSample.Controllers
 {
@@ -11,12 +12,13 @@ namespace PoeSample.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         ClaimsContext claimsContext;
-
+        ClaimService claimService;
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
             claimsContext = new ClaimsContext();
             claimsContext.Database.EnsureCreated();
+            claimService = new ClaimService();
         }
 
         public IActionResult Index()
@@ -29,7 +31,10 @@ namespace PoeSample.Controllers
             var user = claimsContext.People.FirstOrDefault(x => x.Id == userId);
 
             ViewBag.UserProfile = user?.FirstName + " " + user?.LastName;
-            return View();
+
+            //get the user's claims from the database
+            var claims = claimService.GetAllClaimsForUser(user?.Id ?? 0);
+            return View(claims);
         }
 
         public IActionResult Login()
@@ -49,7 +54,7 @@ namespace PoeSample.Controllers
                     HttpContext.Session.SetString("Role", person.Role);
                     if (person.Role == "Lecturer")
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Lecturer");
                     }
                     else
                     {
@@ -65,6 +70,8 @@ namespace PoeSample.Controllers
             }
             return View();
         }
+
+     
         public IActionResult Privacy()
         {
             return View();

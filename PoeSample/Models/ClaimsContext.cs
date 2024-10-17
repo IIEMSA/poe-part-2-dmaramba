@@ -25,13 +25,10 @@ namespace PoeSample.Models
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Person>().HasKey(x => x.Id);
-
-            modelBuilder.Entity<Claim>(entity =>
-            {
-                entity.HasKey(x => x.Id);
-                entity.HasOne(p => p.Person).WithMany(x => x.Claims);
-            });
+            modelBuilder.ApplyConfiguration(new ClaimConfiguration());
             modelBuilder.ApplyConfiguration(new PersonConfiguration());
+            modelBuilder.ApplyConfiguration(new RateConfiguration());
+            modelBuilder.ApplyConfiguration(new StatusConfiguration());
         }
 
     }
