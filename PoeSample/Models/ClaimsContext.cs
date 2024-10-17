@@ -6,6 +6,8 @@ namespace PoeSample.Models
     public class ClaimsContext : DbContext
     {
         public DbSet<Claim> Claims { get; set; }
+        public DbSet<Class> Classes { get; set; }
+        public DbSet<Course> Courses { get; set; }
         public DbSet<Person> People { get; set; }
 
         public DbSet<Rate> Rates { get; set; }
@@ -29,6 +31,8 @@ namespace PoeSample.Models
             modelBuilder.ApplyConfiguration(new PersonConfiguration());
             modelBuilder.ApplyConfiguration(new RateConfiguration());
             modelBuilder.ApplyConfiguration(new StatusConfiguration());
+            modelBuilder.ApplyConfiguration(new ClassConfiguration());
+            modelBuilder.ApplyConfiguration(new CourseConfiguration());
         }
 
     }

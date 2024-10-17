@@ -15,7 +15,7 @@ namespace PoeSample.Models.Seeders
                 new Claim
                 {
                     Id = 1,
-                    StatusId = 2,
+                    StatusId = 3,
                     PersonId = 1,
                     DateClaimed = DateTime.Now,
                     Rate = 800,
@@ -28,7 +28,7 @@ namespace PoeSample.Models.Seeders
                   new Claim
                   {
                       Id = 2,
-                      StatusId = 2,
+                      StatusId =3,
                       PersonId = 2,
                       DateClaimed = DateTime.Now,
                       Rate = 800,

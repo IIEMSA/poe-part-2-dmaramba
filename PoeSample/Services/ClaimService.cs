@@ -47,10 +47,29 @@ namespace PoeSample.Services
             return claim.Id;
         }
 
-        public List<Claim> GetAllClaimsForUser(int personId)
+        public List<ClaimItemModel> GetAllClaimsForUser(int personId)
         {
             // search on the db and return the user claims
-            var claims = claimsContext.Claims.Where(x => x.PersonId == personId).ToList();
+            var claims = (from c in claimsContext.Claims
+                          join p in claimsContext.People on c.PersonId equals p.Id
+                          join s in claimsContext.ClaimStatuses on c.StatusId equals s.Id
+                          join cl in claimsContext.Classes on c.ClassId equals cl.Id
+                          join co in claimsContext.Courses on c.CourseId equals co.Id
+                          where c.PersonId == personId
+                          select new ClaimItemModel
+                          {
+                              Id = c.Id,
+                              DateClaimed = c.DateClaimed,
+                              ClassName = cl.ClassName,
+                              CourseName = co.Title,
+                              PersonName = p.FirstName + " " + p.LastName,
+                              Rate = c.Rate,
+                              Hours=c.Hours,
+                              Status = s.Status,
+                              StatusId = c.StatusId,
+                              Total = c.TotalFee
+                          }
+                          ).OrderByDescending(x => x.DateClaimed).ToList();
 
             return claims.OrderByDescending(x => x.DateClaimed).ThenBy(x => x.StatusId).ToList();
         }

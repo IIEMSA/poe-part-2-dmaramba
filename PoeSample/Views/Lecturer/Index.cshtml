@@ -1,11 +1,44 @@
-﻿@model List<Claim>
+﻿@model List<ClaimItemModel>
 
+@{
+    ViewData["Title"] = "Home Page";
+}
 
-<div class="text-center">
-    <h4 class="display-4">Welcome @ViewBag.UserProfile</h4>
+<div class="text-right">
+    <h6 class="display-4">Welcome @ViewBag.UserProfile</h6>
 </div>
 
-@foreach (var item in Model)
-{
-    <p>@item.TotalFee</p>
-}
+<div stye="text-align:right"><a href="/Lecturer/AddClaim" class="btn btn-primary">Add New Claim</a> </div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Course</th>
+            <th scope="col">Class</th>
+            <th scope="col">Date Claimed</th>
+            <th scope="col">Hours</th>
+            <th scope="col">Rate</th>
+            <th scope="col">Total</th>
+            <th scope="col">Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.CourseName</td>
+                <td>@item.ClassName</td>
+                <td>@item.DateClaimed.ToString("dd MMM yyyy")</td>
+                <td>@item.Hours</td>
+                <td>@item.Rate</td>
+                <td>@item.Total</td>
+                <td>@item.Status</td>
+                <td>
+                    <a asp-action="Download" asp-route-claimId="@item.Id" class="btn btn-success">Documents</a>
+                </td>
+            </tr>
+   
+        }
+    </tbody>
+</table>

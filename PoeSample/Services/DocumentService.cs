@@ -5,7 +5,11 @@ namespace PoeSample.Services
     public class DocumentService
     {
         ClaimsContext claimsContext;
-        public DocumentService() { claimsContext = new ClaimsContext(); }
+        public DocumentService()
+        {
+            claimsContext = new ClaimsContext();
+            claimsContext.Database.EnsureCreated();
+        }
 
         //add new document
         public int AddClaimDocument(ClaimDocument claimDocument)
