@@ -19,7 +19,8 @@ namespace PoeSample.Models
        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseInMemoryDatabase(databaseName: "DatabaseDB");
+            //  optionsBuilder.UseInMemoryDatabase(databaseName: "DatabaseDB");
+            optionsBuilder.UseSqlite("Data Source=ClaimsDB.db");
         }
 
 

@@ -6,6 +6,12 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using PoeSample.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Storage.Json;
+using Newtonsoft.Json;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.Reflection.PortableExecutable;
+using static iTextSharp.text.pdf.AcroFields;
 
 namespace PoeSample.Controllers
 {
@@ -37,6 +43,7 @@ namespace PoeSample.Controllers
 
             ViewBag.UserProfile = user?.FirstName + " " + user?.LastName;
             var claims = claimService.GetAllClaimsForUser(userId.Value);//get the profile that is logged in
+            HttpContext.Session.SetString("ClaimsData", JsonConvert.SerializeObject(claims));
             return View(claims);
         }
 
@@ -49,6 +56,119 @@ namespace PoeSample.Controllers
             model.Courses = new SelectList(courses, "Id", "Title");
             model.Classes = new SelectList(classes, "Id", "ClassName");
             return View(model);
+        }
+
+
+        public IActionResult DownloadReport()
+        {
+            string fileName = DateTime.Now.ToFileTime() + ".pdf";
+            //get data from session
+            var claimsData = HttpContext.Session.GetString("ClaimsData");
+            var claims = JsonConvert.DeserializeObject<List<ClaimItemModel>>(claimsData!);
+            iTextSharp.text.Document document = new iTextSharp.text.Document(PageSize.A4, 30, 30, 30, 40);
+            string uploadPath = Path.Combine(_environment.WebRootPath, "uploads");
+            var fullPath = Path.Combine(uploadPath, fileName);
+            var fs = new FileStream(fullPath, FileMode.Create);
+            PdfWriter writer = PdfWriter.GetInstance(document, fs);
+            Font header = FontFactory.GetFont("Arial", 10, Font.BOLD, BaseColor.BLACK);
+            Font data = FontFactory.GetFont("Arial", 8, Font.NORMAL, BaseColor.BLACK);
+            document.Open();
+            document.Add(new Paragraph("Claims Report", header));
+            document.Add(new Paragraph($"Date {DateTime.Now.ToString("dd MMM yyyy HH:mm")}", header));
+
+            PdfPTable table = new PdfPTable(7);
+            table.HorizontalAlignment = 0;
+            table.WidthPercentage = 100;
+            float[] widths = new float[] { 30, 20, 10, 10, 10, 10, 10 };
+            table.SetWidths(widths);
+            PdfPCell cell = new PdfPCell();
+            cell.Phrase = new Phrase("Course", header);
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            cell.Phrase = new Phrase("Class", header);
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            cell.Phrase = new Phrase("Date", header);
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            cell.Phrase = new Phrase("Hours", header);
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            cell.Phrase = new Phrase("Rate", header);
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            cell.Phrase = new Phrase("Total", header);
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            cell.Phrase = new Phrase("Status", header);
+            table.AddCell(cell);
+
+
+            foreach (var item in claims!)
+            {
+
+                cell = new PdfPCell();
+                cell.Phrase = new Phrase(item.CourseName, data);
+                table.AddCell(cell);
+
+                cell = new PdfPCell();
+                cell.Phrase = new Phrase(item.ClassName, data);
+                table.AddCell(cell);
+
+                cell = new PdfPCell();
+                cell.Phrase = new Phrase(item.DateClaimed.ToString("dd MMM yyyy"), data);
+                table.AddCell(cell);
+
+                cell = new PdfPCell();
+                cell.Phrase = new Phrase(item.Hours.ToString(), data);
+                table.AddCell(cell);
+
+                cell = new PdfPCell();
+                cell.Phrase = new Phrase(item.Rate.ToString(), data);
+                table.AddCell(cell);
+
+                cell = new PdfPCell();
+                cell.Phrase = new Phrase(item.Total.ToString(), data);
+                table.AddCell(cell);
+
+                cell = new PdfPCell();
+                cell.Phrase = new Phrase(item.Status, data);
+                table.AddCell(cell);
+
+            
+
+            }
+
+
+            cell = new PdfPCell();
+            cell.Colspan = 5;
+            cell.Phrase = new Phrase("TOTAL", header);
+            table.AddCell(cell);
+
+
+
+            cell = new PdfPCell();
+            cell.Colspan = 2;
+            cell.Phrase = new Phrase(claims.Sum(x=>x.Total).ToString(), header);
+            table.AddCell(cell);
+
+
+        
+
+            document.Add(new Paragraph(Environment.NewLine));
+            document.Add(table);
+
+            document.Close();
+            writer.Close();
+            fs.Close();
+
+            return Redirect($"/uploads/{fileName}");
         }
 
         [HttpPost]

@@ -42,6 +42,11 @@ namespace PoeSample.Controllers
             return View();
         }
 
+        public IActionResult Logout()
+        {
+            return RedirectToAction("Login");
+        }
+
         [HttpPost]
         public IActionResult Login(LoginViewModel model)
         {

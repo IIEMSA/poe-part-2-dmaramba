@@ -3,6 +3,28 @@
 @{
     ViewData["Title"] = "Add new Claim";
 }
+
+<div class="container mt-5">
+    <h2>Sample Form</h2>
+    <form>
+        <div class="mb-3">
+            <label for="selectList" class="form-label">Choose an Option</label>
+            <select class="form-select" id="selectList" required>
+                <option value="" disabled selected>Select an option</option>
+                <option value="option1">Option 1</option>
+                <option value="option2">Option 2</option>
+                <option value="option3">Option 3</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="inputBox" class="form-label">Input Your Text</label>
+            <input type="text" class="form-control" id="inputBox" placeholder="Enter some text" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
      <form method="post"  asp-controller="Lecturer" asp-action="AddClaim" enctype="multipart/form-data">​
                   @if (!String.IsNullOrEmpty(ViewBag.Message))
     {
